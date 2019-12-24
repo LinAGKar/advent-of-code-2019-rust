@@ -25,7 +25,7 @@ fn main() {
                     }
 
                     99 => {
-                    break;
+                        break;
                     }
                 
                     _ => panic!("Unknown opcode")
