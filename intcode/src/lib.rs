@@ -23,37 +23,25 @@ impl IntCode {
 
     fn expand_program(&mut self, size: usize) {
         if size > self.memory.len() {
-//             eprintln!("self.memory.resize({}, 0);", size);
             self.memory.resize(size, 0);
         }
     }
 
     pub fn get_at_address(&mut self, address: usize) -> i64 {
         self.expand_program(address + 1);
-//         eprintln!("Get from {}", address);
         self.memory[address]
     }
 
     pub fn set_at_address(&mut self, address: usize, val: i64) {
         self.expand_program(address + 1);
         self.memory[address] = val;
-//         eprintln!("Set {} to {}", address, val);
     }
 
     fn get(&mut self, op: i64, param_offset: usize) -> i64 {
         let param = self.memory[self.pc + param_offset];
         let parameter_mode = (op / 10i64.pow(param_offset as u32 + 1)) % 10;
 
-//         match parameter_mode {
-//             0 => self.get_at_address(param as usize),
-// 
-//             1 => param,
-// 
-//             2 => self.get_at_address((self.relative_base + param) as usize),
-// 
-//             x => panic!("Unknown parameter mode {}", x),
-//         }
-        let x = match parameter_mode {
+        match parameter_mode {
             0 => self.get_at_address(param as usize),
 
             1 => param,
@@ -61,9 +49,7 @@ impl IntCode {
             2 => self.get_at_address((self.relative_base + param) as usize),
 
             x => panic!("Unknown parameter mode {}", x),
-        };
-//         eprintln!("Got {}", x);
-        x
+        }
     }
 
     fn set(&mut self, op: i64, param_offset: usize, val: i64) {
@@ -84,8 +70,6 @@ impl IntCode {
     pub fn iterate(&mut self) -> bool {
         let op = self.memory[self.pc];
         let opcode = op % 100;
-//         eprintln!("op {} opcode {} pc {}", op, opcode, self.pc);
-//         eprintln!("memory {:?}", self.memory);
 
         match opcode {
             1 => {
@@ -141,7 +125,6 @@ impl IntCode {
             9 => {
                 self.relative_base += self.get(op, 1);
                 self.pc += 2;
-//                 eprintln!("relative_base {}", self.relative_base);
             }
 
             99 => {
@@ -151,13 +134,16 @@ impl IntCode {
             x => panic!("Unknown opcode {}", x)
         }
 
-//         eprintln!("memory[63] {}", self.memory[63]);
-
         true
     }
 
     pub fn put_input(&mut self, input: i64) {
         self.inputs.push_back(input);
+    }
+
+    pub fn set_input(&mut self, input: i64) {
+        self.inputs.clear();
+        self.last_input = input;
     }
 
     pub fn get_output(&mut self) -> Option<i64> {
