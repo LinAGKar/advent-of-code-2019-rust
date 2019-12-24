@@ -1,32 +1,16 @@
-use std::io;
-
 fn main() {
     let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
-    let mut program: Vec<usize> = input.trim().split(',').map(|x| x.parse().unwrap()).collect();
-    let mut pc = 0;
-    program[1] = 12;
-    program[2] = 2;
-    loop {
-        match program[pc] {
-            1 => {
-                let result_pos = program[pc + 3];
-                program[result_pos] = program[program[pc + 1]] + program[program[pc + 2]];
-                pc += 4;
-            }
+    std::io::stdin().read_line(&mut input).unwrap();
+    let mut computer = intcode::IntCode::new(input.trim().split(',').map(|x| x.parse().unwrap()).collect());
 
-            2 => {
-                let result_pos = program[pc + 3];
-                program[result_pos] = program[program[pc + 1]] * program[program[pc + 2]];
-                pc += 4;
-            }
+    computer.set_at_address(1, 12);
+    computer.set_at_address(2, 2);
 
-            99 => {
-               break;
-            }
-        
-            _ => panic!("Unknown opcode")
+    while computer.iterate() {
+        while let Some(output) = computer.get_output() {
+            println!("{}", output);
         }
     }
-    println!("{}", program[0]);
+
+    println!("{}", computer.get_at_address(0));
 }
