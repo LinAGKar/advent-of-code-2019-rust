@@ -149,4 +149,12 @@ impl IntCode {
     pub fn get_output(&mut self) -> Option<i64> {
         self.outputs.pop_front()
     }
+
+    pub fn get_outputs(&mut self, n: usize) -> Option<Vec<i64>>  {
+        if self.outputs.len() >= n {
+            Some((0..n).map(|_| self.outputs.pop_front().unwrap()).collect())
+        } else {
+            None
+        }
+    }
 }
