@@ -27,8 +27,12 @@ fn draw_score(window: &Window, score: i64) {
     window.refresh();
 }
 
-
-fn calc_expected_paddle_x(mut tiles: HashMap<(i64, i64), i64>, mut ball_pos: (i64, i64), mut ball_direction: (i64, i64), paddle_y: i64) -> i64 {
+fn calc_expected_paddle_x(
+    mut tiles: HashMap<(i64, i64), i64>,
+    mut ball_pos: (i64, i64),
+    mut ball_direction: (i64, i64),
+    paddle_y: i64,
+) -> i64 {
     while ball_pos.1 < paddle_y - 1 || ball_direction.1 <= 0 {
         let next_x_pos = (ball_pos.0 + ball_direction.0, ball_pos.1);
         let next_y_pos = (ball_pos.0, ball_pos.1 + ball_direction.1);
@@ -107,7 +111,9 @@ fn main() {
                             do_calc_expected_paddle_x = true;
                         }
                         if do_calc_expected_paddle_x {
-                            expected_paddle_x = calc_expected_paddle_x(tiles.clone(), ball_pos, ball_direction, paddle_pos.1);
+                            expected_paddle_x = calc_expected_paddle_x(
+                                tiles.clone(), ball_pos, ball_direction, paddle_pos.1,
+                            );
                         }
                     }
                     ball_pos = (output[0], output[1]);
