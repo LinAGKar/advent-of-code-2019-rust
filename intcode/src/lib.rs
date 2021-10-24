@@ -1,5 +1,6 @@
 use std::collections::VecDeque;
 
+#[derive(Clone)]
 pub struct IntCode {
     memory: Vec<i64>,
     pc: usize,
