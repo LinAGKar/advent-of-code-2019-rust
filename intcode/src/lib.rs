@@ -158,4 +158,15 @@ impl IntCode {
             None
         }
     }
+
+    pub fn run(&mut self) -> Option<i64> {
+        loop {
+            if let Some(output) = self.get_output() {
+                return Some(output);
+            }
+            if !self.iterate() {
+                return None;
+            }
+        }
+    }
 }

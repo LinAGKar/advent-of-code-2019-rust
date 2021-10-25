@@ -5,11 +5,9 @@ fn main() {
     computer.put_input(1);
     let mut prev_output = 0;
 
-    while computer.iterate() {
-        while let Some(output) = computer.get_output() {
-            assert_eq!(prev_output, 0);
-            prev_output = output;
-        }
+    while let Some(output) = computer.run() {
+        assert_eq!(prev_output, 0);
+        prev_output = output;
     }
 
     println!("{}", prev_output);

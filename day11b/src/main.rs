@@ -30,25 +30,23 @@ fn main() {
     painted_panels.insert(Point { x: 0, y: 0 }, 1);
     computer.set_input(1);
 
-    while computer.iterate() {
-        while let Some(output) = computer.get_output() {
-            match state {
-                RobotState::Painting => {
-                    painted_panels.insert(position, output);
-                    computer.set_input(output);
-                    state = RobotState::Moving;
-                }
+    while let Some(output) = computer.run() {
+        match state {
+            RobotState::Painting => {
+                painted_panels.insert(position, output);
+                computer.set_input(output);
+                state = RobotState::Moving;
+            }
 
-                RobotState::Moving => {
-                    match output {
-                        1 => direction = Point { x: -direction.y, y: direction.x },
+            RobotState::Moving => {
+                match output {
+                    1 => direction = Point { x: -direction.y, y: direction.x },
 
-                        _ => direction = Point { x: direction.y, y: -direction.x },
-                    }
-                    position += direction;
-                    computer.set_input(*painted_panels.get(&position).unwrap_or(&0));
-                    state = RobotState::Painting;
+                    _ => direction = Point { x: direction.y, y: -direction.x },
                 }
+                position += direction;
+                computer.set_input(*painted_panels.get(&position).unwrap_or(&0));
+                state = RobotState::Painting;
             }
         }
     }

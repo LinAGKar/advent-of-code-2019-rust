@@ -32,19 +32,15 @@ fn main() {
 
         let mut current_amplifier = 0;
 
-        'amploop: loop {
+        loop {
             let amp = amplifiers.get_mut(current_amplifier).unwrap();
             current_amplifier = (current_amplifier + 1) % 5;
             amp.put_input(signal);
 
-            loop {
-                if !amp.iterate() {
-                    break 'amploop;
-                }
-                if let Some(x) = amp.get_output() {
-                    signal = x;
-                    break;
-                }
+            if let Some(output) = amp.run() {
+                signal = output;
+            } else {
+                break;
             }
         }
 

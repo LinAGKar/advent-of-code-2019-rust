@@ -29,10 +29,8 @@ fn main() {
             computer.put_input(phase as i64);
             computer.put_input(signal);
 
-            while computer.iterate() {
-                while let Some(output) = computer.get_output() {
-                    signal = output;
-                }
+            while let Some(output) = computer.run() {
+                signal = output;
             }
         }
 

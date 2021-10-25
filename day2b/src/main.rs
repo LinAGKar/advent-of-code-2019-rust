@@ -9,10 +9,8 @@ fn main() {
             computer.set_at_address(1, i);
             computer.set_at_address(2, j);
 
-            while computer.iterate() {
-                while let Some(output) = computer.get_output() {
-                    println!("{}", output);
-                }
+            while let Some(output) = computer.run() {
+                println!("{}", output);
             }
             if computer.get_at_address(0) == 19690720 {
                 println!("{}", 100 * i + j);

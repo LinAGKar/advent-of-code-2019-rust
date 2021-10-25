@@ -6,10 +6,8 @@ fn main() {
     computer.set_at_address(1, 12);
     computer.set_at_address(2, 2);
 
-    while computer.iterate() {
-        while let Some(output) = computer.get_output() {
-            println!("{}", output);
-        }
+    while let Some(output) = computer.run() {
+        println!("{}", output);
     }
 
     println!("{}", computer.get_at_address(0));

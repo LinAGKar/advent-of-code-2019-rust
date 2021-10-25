@@ -30,28 +30,27 @@ fn main() {
 
             let mut computer = computer.clone();
             computer.put_input(dir);
-            while computer.iterate() {
-                if let Some(output) = computer.get_output() {
-                    match output {
-                        0 => {
-                            walls.insert((x, y));
-                            break;
-                        }
-                        1 => {
-                            next.push_back((x, y, dist + 1, computer));
-                            break;
-                        }
-                        2 => {
-                            next.clear();
-                            next.push_back((x, y, 0, computer));
-                            std::mem::swap(&mut visited, &mut walls);
-                            walls.clear();
-                            visited.insert((x, y));
-                            continue 'outer;
-                        }
-                        _ => panic!(),
+
+            if let Some(output) = computer.run() {
+                match output {
+                    0 => {
+                        walls.insert((x, y));
                     }
+                    1 => {
+                        next.push_back((x, y, dist + 1, computer));
+                    }
+                    2 => {
+                        next.clear();
+                        next.push_back((x, y, 0, computer));
+                        std::mem::swap(&mut visited, &mut walls);
+                        walls.clear();
+                        visited.insert((x, y));
+                        continue 'outer;
+                    }
+                    _ => panic!(),
                 }
+            } else {
+                panic!();
             }
         }
     }

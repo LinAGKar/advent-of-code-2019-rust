@@ -26,23 +26,18 @@ fn main() {
 
             let mut computer = computer.clone();
             computer.put_input(dir);
-            while computer.iterate() {
-                if let Some(output) = computer.get_output() {
-                    match output {
-                        0 => {
-                            break;
-                        }
-                        1 => {
-                            next.push_back((x, y, dist + 1, computer));
-                            break;
-                        }
-                        2 => {
-                            println!("{}", dist + 1);
-                            break 'outer;
-                        }
-                        _ => panic!(),
+            if let Some(output) = computer.run() {
+                match output {
+                    0 => {}
+                    1 => next.push_back((x, y, dist + 1, computer)),
+                    2 => {
+                        println!("{}", dist + 1);
+                        break 'outer;
                     }
+                    _ => panic!(),
                 }
+            } else {
+                panic!();
             }
         }
     }
