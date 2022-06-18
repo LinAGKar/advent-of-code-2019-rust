@@ -8,6 +8,8 @@ pub struct IntCode {
     inputs: VecDeque<i64>,
     outputs: VecDeque<i64>,
     last_input: i64,
+    default_input: Option<i64>,
+    waiting_for_input_count: u32,
 }
 
 impl IntCode {
@@ -19,6 +21,8 @@ impl IntCode {
             inputs: VecDeque::new(),
             outputs: VecDeque::new(),
             last_input: 0,
+            default_input: None,
+            waiting_for_input_count: 0,
         }
     }
 
@@ -88,6 +92,9 @@ impl IntCode {
             3 => {
                 if let Some(x) = self.inputs.pop_front() {
                     self.last_input = x;
+                } else if let Some(x) = self.default_input {
+                    self.last_input = x;
+                    self.waiting_for_input_count += 1;
                 }
                 self.set(op, 1, self.last_input);
                 self.pc += 2;
@@ -140,18 +147,20 @@ impl IntCode {
 
     pub fn put_input(&mut self, input: i64) {
         self.inputs.push_back(input);
+        self.waiting_for_input_count = 0;
     }
 
     pub fn set_input(&mut self, input: i64) {
         self.inputs.clear();
         self.last_input = input;
+        self.waiting_for_input_count = 0;
     }
 
     pub fn get_output(&mut self) -> Option<i64> {
         self.outputs.pop_front()
     }
 
-    pub fn get_outputs(&mut self, n: usize) -> Option<Vec<i64>>  {
+    pub fn get_outputs(&mut self, n: usize) -> Option<Vec<i64>> {
         if self.outputs.len() >= n {
             Some((0..n).map(|_| self.outputs.pop_front().unwrap()).collect())
         } else {
@@ -168,5 +177,13 @@ impl IntCode {
                 return None;
             }
         }
+    }
+
+    pub fn set_default_input(&mut self, x: i64) {
+        self.default_input = Some(x);
+    }
+
+    pub fn waiting_for_input(&self) -> bool {
+        self.waiting_for_input_count >= 2
     }
 }
