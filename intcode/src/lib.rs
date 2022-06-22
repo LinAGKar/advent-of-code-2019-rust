@@ -186,4 +186,27 @@ impl IntCode {
     pub fn waiting_for_input(&self) -> bool {
         self.waiting_for_input_count >= 2
     }
+
+    pub fn put_line(&mut self, line: &str) {
+        for c in line.chars() {
+            self.put_input(c as i64);
+        }
+
+        self.put_input('\n' as i64);
+    }
+
+    pub fn get_line(&mut self, output: &mut String) -> Result<(), ()> {
+        output.clear();
+
+        while let Some(c) = self.run() {
+            let c = c as u8 as char;
+            if c == '\n' {
+                return Ok(());
+            }
+
+            output.push(c);
+        }
+
+        Err(())
+    }
 }
